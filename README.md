@@ -69,3 +69,18 @@ fun emailPattern(): Pattern = Pattern.compile(
 /** Email пользователя не проходит проверку */
 class EmailException(msg: String = "Email is required!"): Throwable(msg)
 ```
+
+### ktor plugins
+
+```kotlin
+/**
+ * Плагин формирует ID запроса и сохраняет значение в аттрибуты вызова.
+ * Можно запросить call.attributes[AttributeKeys.RESPONSE_ID.value]
+ */
+val ResponseIdPlugin = createApplicationPlugin(name = "ResponseIdPlugin")
+
+/** Аттрибуты вызова */
+enum class AttributeKeys(val value: AttributeKey<String>) {
+    RESPONSE_ID(AttributeKey("ResponseID"))
+}
+```
