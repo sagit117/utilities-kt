@@ -4,6 +4,7 @@
 
 package utilities
 
+import io.ktor.util.*
 import utilities.exceptions.EmailException
 import utilities.extensions.isEmail
 
