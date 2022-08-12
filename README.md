@@ -47,6 +47,28 @@ open class ClientRequest(val client: HttpClient)
 
 suspend inline fun requestGet(path: String, crossinline init: Resolver.() -> Unit)
 suspend inline fun <reified T : Any> requestPost(path: String, body: T, crossinline init: Resolver.() -> Unit)
+
+/** Postgres exposed connector */
+object PostgresConnector {
+    fun init(
+        driverClassName: String,
+        jdbcURL: String,
+        user: String,
+        password: String,
+        initTables: Transaction.() -> Unit, // метод инициации таблиц
+    )
+
+    /**
+     * Запрос к БД
+     *
+     * @param block функция запроса
+     */
+    fun <T> dbQuery(block: suspend () -> T): T = runBlocking {
+        newSuspendedTransaction(Dispatchers.IO) {
+            block()
+        }
+    }
+}
 ```
 
 ### regex patterns
