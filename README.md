@@ -106,3 +106,45 @@ enum class AttributeKeys(val value: AttributeKey<String>) {
     RESPONSE_ID(AttributeKey("ResponseID"))
 }
 ```
+
+### ktor templating
+
+```kotlin
+/**
+ * Класс для наследования базового слоя web интерфейса
+ *
+ * @property page страница, которая должна обрисовываться внутри слоя
+ * @property styleUrl список css файлов для применения
+ * @property pageTitle заголовок страницы
+ */
+abstract class BaseLayout: Template<HTML> {
+    protected val content = TemplatePlaceholder<Template<FlowContent>>()
+    lateinit var page: Template<FlowContent>
+    lateinit var pageTitle: String
+
+    /** css files for page */
+    val styleUrl: MutableSet<String> = mutableSetOf()
+
+    /** js files for page */
+    val scriptUrl: MutableSet<String> = mutableSetOf()
+
+    fun HTML.defaultHead()
+}
+
+/**
+ * Базовый класс для страниц.
+ */
+abstract class BasePage: Template<FlowContent> {
+    val content = TemplatePlaceholder<Template<FlowContent>>()
+}
+
+/** Компонент выводит customElements <flash-message> */
+class FlashMessage(
+    private val flashMessageDTO: FlashMessageDTO,
+    private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY hh:mm:ss")
+) : Template<FlowContent> {
+    override fun FlowContent.apply() {
+        flashMessage {}
+    }
+}
+```
