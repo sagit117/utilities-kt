@@ -148,3 +148,47 @@ class FlashMessage(
     }
 }
 ```
+
+### JWT
+
+```kotlin
+/**
+ * Получение верифицированного токена
+ *
+ * @param secret ключ шифрования
+ * @param token токен доступа
+ *
+ * @throws AlgorithmMismatchException – if the algorithm stated in the token's header it's not equal to the one defined in the JWTVerifier.
+ * @throws SignatureVerificationException – if the signature is invalid.
+ * @throws TokenExpiredException – if the token has expired.
+ * @throws InvalidClaimException – if a claim contained a different value than the expected one.
+ * @throws JWTVerificationException
+ *
+ * @return верифицированный токен
+ */
+fun checkJWT(secret: String, token: String): DecodedJWT?
+
+/**
+ * Генерация JWT
+ *
+ * @param secret ключ шифрования
+ * @param expiresAtMs время жизни токена
+ * @param claims список для передачи пар ключ-значения, который попадет в нагрузку
+ *
+ * @return JWT
+ */
+fun generateJWT(secret: String, expiresAtMs: Long, claims: List<Pair<String, String>>): String
+```
+
+### date 
+
+```kotlin
+/**
+ * Генерация даты из срока жизни + текущая дата
+ *
+ * @param expiresAt срок жизни
+ *
+ * @return дата
+ */
+fun generateDateFromExpiredAt(expiresAtMs: Long): Date
+```
