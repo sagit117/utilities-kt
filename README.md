@@ -147,6 +147,20 @@ class FlashMessage(
         flashMessage {}
     }
 }
+
+/** Базовый класс для компонентов */
+abstract class Component<Context, T>(
+    protected open val ctx: Context,
+    protected open val init: T.() -> Unit
+): Template<FlowContent> {
+    protected val content = TemplatePlaceholder<Template<FlowContent>>()
+}
+
+/** Метод создания компонентов унаследованных от Component */
+inline fun <Context, reified T : Component<Context, T>> createComponent(
+    ctx: Context,
+    noinline init: T.() -> Unit
+): Component<Context, T> 
 ```
 
 ### JWT
