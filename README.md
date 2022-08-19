@@ -180,13 +180,7 @@ inline fun <Context, reified T : Component<Context, T>> createComponent(
  * @see InputType
  */
 class InputIn(
-    private val labelInput: String = "Input:",
-    private val typeInput: InputType = InputType.text,
-    private val valueInput: String = "",
-    private val extClass: Set<String> = mutableSetOf(),
-    private val nameInput: String = "",
-    private val placeholderInput: String = "",
-    private val hintInput: String = ""
+    val init: InputIn.() -> Unit
 ) : Template<FlowContent>
 ```
 

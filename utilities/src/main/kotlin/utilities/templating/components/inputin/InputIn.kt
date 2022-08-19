@@ -22,15 +22,19 @@ import utilities.UtilitiesLibrary
  * @see InputType
  */
 class InputIn(
-    private val labelInput: String = "Input:",
-    private val typeInput: InputType = InputType.text,
-    private val valueInput: String = "",
-    private val extClass: Set<String> = mutableSetOf(),
-    private val nameInput: String = "",
-    private val placeholderInput: String = "",
-    private val hintInput: String = ""
+    val init: InputIn.() -> Unit
 ) : Template<FlowContent> {
+    var labelInput: String = "Input:"
+    var typeInput: InputType = InputType.text
+    var valueInput: String = ""
+    var extClass: Set<String> = mutableSetOf()
+    var nameInput: String = ""
+    var placeholderInput: String = ""
+    var hintInput: String = ""
+
     override fun FlowContent.apply() {
+        init()
+
         val internalId = UtilitiesLibrary.randomCode(10)
 
         inputIn {
