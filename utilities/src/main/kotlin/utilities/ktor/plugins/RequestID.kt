@@ -16,7 +16,7 @@ val ResponseIdPlugin = createApplicationPlugin(name = "ResponseIdPlugin") {
     onCall { call ->
         call.attributes.put(
             AttributeKeys.RESPONSE_ID.value,
-            "${System.currentTimeMillis()}-${UtilitiesLibrary().randomCode(10)}"
+            "${System.currentTimeMillis()}-${UtilitiesLibrary.randomCode(10)}"
         )
     }
 }

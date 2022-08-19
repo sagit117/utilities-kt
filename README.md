@@ -11,7 +11,7 @@
  * @param length длина хеша
  * @return строка хэша
  */
-UtilitiesLibrary().randomCode(length) // Генерация случайного хэша заданной длины
+UtilitiesLibrary.randomCode(length) // Генерация случайного хэша заданной длины
 
 /**
  * Класс для хранения и валидации Email
@@ -19,8 +19,8 @@ UtilitiesLibrary().randomCode(length) // Генерация случайного
  * @property email
  * @throws EmailException если email не пройдет валидацию
  */
-UtilitiesLibrary.Values.Email(email) // Value класс для хранения и валидации email
-object EmailSerializer: KSerializer<UtilitiesLibrary.Values.Email> // Сериализатор для UtilitiesLibrary.Values.Email(email)
+UtilitiesLibrary.Companion.ValueClasses.Email(email) // Value класс для хранения и валидации email
+object EmailSerializer: KSerializer<UtilitiesLibrary.Companion.ValueClasses.Email> // Сериализатор для UtilitiesLibrary.Values.Email(email)
 ```
 
 ### extension String
@@ -130,14 +130,16 @@ abstract class BaseLayout: Template<HTML> {
 
     fun HTML.defaultHead()
 }
-
+```
+```kotlin
 /**
  * Базовый класс для страниц.
  */
 abstract class BasePage: Template<FlowContent> {
     val content = TemplatePlaceholder<Template<FlowContent>>()
 }
-
+```
+```kotlin
 /** Компонент выводит customElements <flash-message> */
 class FlashMessage(
     private val flashMessageDTO: FlashMessageDTO,
@@ -147,7 +149,8 @@ class FlashMessage(
         flashMessage {}
     }
 }
-
+```
+```kotlin
 /** Базовый класс для компонентов */
 abstract class Component<Context, T>(
     protected open val ctx: Context,
@@ -160,7 +163,31 @@ abstract class Component<Context, T>(
 inline fun <Context, reified T : Component<Context, T>> createComponent(
     ctx: Context,
     noinline init: T.() -> Unit
-): Component<Context, T> 
+): Component<Context, T>
+```
+```kotlin
+/**
+ * Компонент input-in
+ *
+ * @property labelInput подпись поля ввода,
+ * @property typeInput тип поля ввода,
+ * @property valueInput значение поля ввода,
+ * @property extClass css класс контейнера
+ * @property nameInput имя поля ввода
+ * @property placeholderInput текст подсказка
+ * @property hintInput всплывающая подсказка
+ *
+ * @see InputType
+ */
+class InputIn(
+    private val labelInput: String = "Input:",
+    private val typeInput: InputType = InputType.text,
+    private val valueInput: String = "",
+    private val extClass: Set<String> = mutableSetOf(),
+    private val nameInput: String = "",
+    private val placeholderInput: String = "",
+    private val hintInput: String = ""
+) : Template<FlowContent>
 ```
 
 ### JWT

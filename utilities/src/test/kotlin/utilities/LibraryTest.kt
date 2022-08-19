@@ -9,13 +9,11 @@ import kotlin.test.assertNotNull
 
 class LibraryTest {
     @Test fun someLibraryMethodReturnsTrue() {
-        val classUnderTest = UtilitiesLibrary()
-
-        assert(classUnderTest.randomCode(10).length == 10)
+        assert(UtilitiesLibrary.randomCode(10).length == 10)
 
         assertFails {
-            UtilitiesLibrary.Values.Email("notEmail@string@")
+            UtilitiesLibrary.Companion.ValueClasses.Email("notEmail@string@")
         }
-        assertNotNull(UtilitiesLibrary.Values.Email("email@string.ru").email)
+        assertNotNull(UtilitiesLibrary.Companion.ValueClasses.Email("email@string.ru").email)
     }
 }
