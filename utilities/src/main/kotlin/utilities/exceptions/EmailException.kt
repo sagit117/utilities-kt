@@ -1,4 +1,4 @@
 package utilities.exceptions
 
 /** Email пользователя не проходит проверку */
-class EmailException(msg: String = "Email is required!"): Throwable(msg)
+class EmailException(msg: String = "Email is required!"): Exception(msg)

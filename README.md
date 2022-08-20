@@ -39,6 +39,12 @@ fun String.isEmail(): String
 fun String.log(moduleName: String): Logger = Logger(moduleName, this)
 ```
 
+### extension ApplicationCall
+```kotlin
+/** Возвращает или параметры формы, или null */
+suspend fun ApplicationCall.receiveParametersOrNull(): Parameters?
+```
+
 ### connectors 
 
 ```kotlin
@@ -89,7 +95,7 @@ fun emailPattern(): Pattern = Pattern.compile(
 
 ```kotlin
 /** Email пользователя не проходит проверку */
-class EmailException(msg: String = "Email is required!"): Throwable(msg)
+class EmailException(msg: String = "Email is required!"): Exception(msg)
 ```
 
 ### ktor plugins
