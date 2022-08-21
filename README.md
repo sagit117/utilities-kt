@@ -190,6 +190,25 @@ class InputIn(
 ) : Template<FlowContent>
 ```
 
+```kotlin
+/**
+ * Компонент select in
+ *
+ * @property data List<SelectInData> данные для выбора
+ * @property extClass css класс контейнера,
+ * @property labelSelect подпись поля ввода,
+ * @property hintSelect всплывающая подсказка,
+ * @property idSelectIn id компонента,
+ * @property nameSelect имя поля ввода,
+ * @property selectedId id выбранной записи
+ */
+class SelectIn(
+    val init: SelectIn.() -> Unit
+): Template<FlowContent>
+
+data class SelectInData(val id: String, val value: String)
+```
+
 ### JWT
 
 ```kotlin

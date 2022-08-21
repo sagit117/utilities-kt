@@ -14,9 +14,9 @@ import utilities.UtilitiesLibrary
  * @property labelInput подпись поля ввода,
  * @property typeInput тип поля ввода,
  * @property valueInput значение поля ввода,
- * @property extClass css класс контейнера
- * @property nameInput имя поля ввода
- * @property placeholderInput текст подсказка
+ * @property extClass css класс контейнера,
+ * @property nameInput имя поля ввода,
+ * @property placeholderInput текст подсказка,
  * @property hintInput всплывающая подсказка
  *
  * @see InputType
