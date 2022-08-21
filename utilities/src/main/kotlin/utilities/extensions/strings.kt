@@ -5,6 +5,7 @@
 package utilities.extensions
 
 import utilities.Logger
+import utilities.UtilitiesLibrary.Companion.hash
 import utilities.exceptions.EmailException
 import utilities.pattern.regex.emailPattern
 
@@ -21,3 +22,8 @@ fun String.isEmail(): String {
 
 /** Логирование строки */
 fun String.log(moduleName: String): Logger = Logger(moduleName, this)
+
+/**
+ * Закодировать строку в sha256
+ */
+fun String.sha256(): String = hash(this)

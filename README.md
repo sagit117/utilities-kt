@@ -11,7 +11,15 @@
  * @param length длина хеша
  * @return строка хэша
  */
-UtilitiesLibrary.randomCode(length) // Генерация случайного хэша заданной длины
+UtilitiesLibrary.randomCode(length) 
+
+/**
+ * Функции хеширования SHA-256
+ * 
+ * @param input строка для шифрования
+ * @return зашифрованная строка
+ */
+UtilitiesLibrary.hash(input)  
 
 /**
  * Класс для хранения и валидации Email
@@ -37,6 +45,11 @@ fun String.isEmail(): String
 
 /** Логирование строки */
 fun String.log(moduleName: String): Logger = Logger(moduleName, this)
+
+/**
+ * Закодировать строку в sha256
+ */
+fun String.sha256()
 ```
 
 ### extension ApplicationCall

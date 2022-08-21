@@ -6,6 +6,7 @@ package utilities
 
 import utilities.exceptions.EmailException
 import utilities.extensions.isEmail
+import java.security.MessageDigest
 
 /** Класс для размещения вспомогательных методов */
 class UtilitiesLibrary {
@@ -23,6 +24,20 @@ class UtilitiesLibrary {
                 .map { kotlin.random.Random.nextInt(0, charPool.size) }
                 .map(charPool::get)
                 .joinToString("");
+        }
+
+        /**
+         * Функции хеширования SHA-256
+         *
+         * @param input строка для шифрования
+         * @return зашифрованная строка
+         */
+        fun hash(input: String): String {
+            val bytes = input.toByteArray()
+            val md = MessageDigest.getInstance("SHA-256")
+            val digest = md.digest(bytes)
+
+            return digest.fold("") { str, it -> str + "%02x".format(it) }
         }
 
         /** Вспомогательные value классы */
