@@ -1,5 +1,6 @@
 package utilities.templating.components
 
+import io.ktor.http.*
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import utilities.templating.components.flashmessage.FlashMessageDTO
@@ -30,6 +31,7 @@ inline fun <Context: FrontContext, reified T : Component<Context, T>> createComp
 
 abstract class FrontContext {
     open var flashMessageDTO: FlashMessageDTO? = null
+    open var formParameters: Parameters? = null
 }
 
 

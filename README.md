@@ -188,7 +188,8 @@ inline fun <Context: FrontContext, reified T : Component<Context, T>> createComp
 ): Component<Context, T>
 
 abstract class FrontContext {
-    var flashMessageDTO: FlashMessageDTO? = null
+    open var flashMessageDTO: FlashMessageDTO? = null
+    open var formParameters: Parameters? = null
 }
 
 ```
