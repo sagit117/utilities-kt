@@ -1,4 +1,8 @@
-package utilities.templating.components
+/*
+ * Copyright (c) 2022.  sagit117@gmail.com <Pavel Aksenov>
+ */
+
+package utilities.templating.components.flashmessage
 
 import kotlinx.html.*
 import kotlinx.html.attributes.Attribute

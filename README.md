@@ -147,10 +147,10 @@ abstract class BasePage: Template<FlowContent> {
 ```
 ```kotlin
 /** Компонент выводит customElements <flash-message> */
-class FlashMessage(
-    private val flashMessageDTO: FlashMessageDTO,
-    private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY hh:mm:ss")
-) : Template<FlowContent> {
+class FlashMessage<Context: FrontContext>(
+    ctx: Context,
+    init: FlashMessage<Context>.() -> Unit
+) : Component<Context, FlashMessage<Context>>(ctx, init) {
     override fun FlowContent.apply() {
         flashMessage {}
     }
@@ -158,7 +158,7 @@ class FlashMessage(
 ```
 ```kotlin
 /** Базовый класс для компонентов */
-abstract class Component<Context, T>(
+abstract class Component<Context: FrontContext, T>(
     protected open val ctx: Context,
     protected open val init: T.() -> Unit
 ): Template<FlowContent> {
@@ -169,10 +169,15 @@ abstract class Component<Context, T>(
  * Метод создания компонентов унаследованных от Component
  * Инициация компонента происходит внутри вызова создания.
  */
-inline fun <Context, reified T : Component<Context, T>> createComponent(
+inline fun <Context: FrontContext, reified T : Component<Context, T>> createComponent(
     ctx: Context,
     noinline init: T.() -> Unit
 ): Component<Context, T>
+
+abstract class FrontContext {
+    var flashMessageDTO: FlashMessageDTO? = null
+}
+
 ```
 ```kotlin
 /**
@@ -188,7 +193,7 @@ inline fun <Context, reified T : Component<Context, T>> createComponent(
  *
  * @see InputType
  */
-class InputIn<Context>(
+class InputIn<Context: FrontContext>(
     ctx: Context,
     init: InputIn<Context>.() -> Unit
 ) : Component<Context, InputIn<Context>>(ctx, init)
@@ -205,7 +210,7 @@ class InputIn<Context>(
  * @property nameSelect имя поля ввода,
  * @property selectedId id выбранной записи
  */
-class SelectIn<Context>(
+class SelectIn<Context: FrontContext>(
     ctx: Context,
     init: SelectIn<Context>.() -> Unit
 ): Component<Context, SelectIn<Context>>(ctx, init)
@@ -216,7 +221,7 @@ data class SelectInData(val id: String, val value: String)
 /**
  * Компонент для выбора TimeZone
  */
-class SelectInTimeZone<Context>(
+class SelectInTimeZone<Context: FrontContext>(
     ctx: Context,
     init: SelectInTimeZone<Context>.() -> Unit
 ): Component<Context, SelectInTimeZone<Context>>(ctx, init)

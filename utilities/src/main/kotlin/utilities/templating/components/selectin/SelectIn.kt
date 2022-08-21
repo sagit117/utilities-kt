@@ -6,6 +6,7 @@ package utilities.templating.components.selectin
 
 import kotlinx.html.*
 import utilities.templating.components.Component
+import utilities.templating.components.FrontContext
 
 /**
  * Компонент select in
@@ -18,7 +19,7 @@ import utilities.templating.components.Component
  * @property nameSelect имя поля ввода,
  * @property selectedId id выбранной записи
  */
-class SelectIn<Context>(
+class SelectIn<Context: FrontContext>(
     ctx: Context,
     init: SelectIn<Context>.() -> Unit
 ): Component<Context, SelectIn<Context>>(ctx, init) {

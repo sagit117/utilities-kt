@@ -8,13 +8,14 @@ import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import utilities.UtilitiesLibrary
 import utilities.templating.components.Component
+import utilities.templating.components.FrontContext
 import utilities.templating.components.createComponent
 import java.util.*
 
 /**
  * Компонент для выбора TimeZone
  */
-class SelectInTimeZone<Context>(
+class SelectInTimeZone<Context: FrontContext>(
     ctx: Context,
     init: SelectInTimeZone<Context>.() -> Unit
 ): Component<Context, SelectInTimeZone<Context>>(ctx, init) {

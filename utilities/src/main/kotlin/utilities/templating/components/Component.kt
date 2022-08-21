@@ -2,10 +2,11 @@ package utilities.templating.components
 
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
+import utilities.templating.components.flashmessage.FlashMessageDTO
 import kotlin.reflect.full.primaryConstructor
 
 /** Базовый класс для компонентов */
-abstract class Component<Context, T>(
+abstract class Component<Context: FrontContext, T>(
     protected open val ctx: Context,
     protected open val init: T.() -> Unit
 ): Template<FlowContent> {
@@ -16,7 +17,7 @@ abstract class Component<Context, T>(
  * Метод создания компонентов унаследованных от Component
  * Инициация компонента происходит внутри вызова создания.
  */
-inline fun <Context, reified T : Component<Context, T>> createComponent(
+inline fun <Context: FrontContext, reified T : Component<Context, T>> createComponent(
     ctx: Context,
     noinline init: T.() -> Unit
 ): Component<Context, T> = if (T::class.primaryConstructor != null ) {
@@ -26,5 +27,9 @@ inline fun <Context, reified T : Component<Context, T>> createComponent(
     } else {
         throw Throwable("T class must have a primary constructor")
     }
+
+abstract class FrontContext {
+    var flashMessageDTO: FlashMessageDTO? = null
+}
 
 

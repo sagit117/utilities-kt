@@ -1,18 +1,27 @@
-package utilities.templating.components
+/*
+ * Copyright (c) 2022.  sagit117@gmail.com <Pavel Aksenov>
+ */
 
-import io.ktor.server.html.*
+package utilities.templating.components.flashmessage
+
 import kotlinx.html.FlowContent
 import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.role
+import utilities.templating.components.*
 import java.time.format.DateTimeFormatter
 
 /** Компонент выводит customElements <flash-message> */
-class FlashMessage(
-    private val flashMessageDTO: FlashMessageDTO,
-    private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY hh:mm:ss")
-) : Template<FlowContent> {
+class FlashMessage<Context: FrontContext>(
+    ctx: Context,
+    init: FlashMessage<Context>.() -> Unit
+) : Component<Context, FlashMessage<Context>>(ctx, init) {
+    private val flashMessageDTO: FlashMessageDTO? = ctx.flashMessageDTO
+    var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY hh:mm:ss")
+
     override fun FlowContent.apply() {
+        if (flashMessageDTO == null) return
+
         flashMessage {
             title = flashMessageDTO.title
             message = flashMessageDTO.message

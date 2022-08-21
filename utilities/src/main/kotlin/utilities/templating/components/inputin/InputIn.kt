@@ -7,6 +7,7 @@ package utilities.templating.components.inputin
 import kotlinx.html.*
 import utilities.UtilitiesLibrary
 import utilities.templating.components.Component
+import utilities.templating.components.FrontContext
 
 /**
  * Компонент input-in
@@ -21,7 +22,7 @@ import utilities.templating.components.Component
  *
  * @see InputType
  */
-class InputIn<Context>(
+class InputIn<Context: FrontContext>(
     ctx: Context,
     init: InputIn<Context>.() -> Unit
 ) : Component<Context, InputIn<Context>>(ctx, init) {
