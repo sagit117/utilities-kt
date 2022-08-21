@@ -165,7 +165,10 @@ abstract class Component<Context, T>(
     protected val content = TemplatePlaceholder<Template<FlowContent>>()
 }
 
-/** Метод создания компонентов унаследованных от Component */
+/**
+ * Метод создания компонентов унаследованных от Component
+ * Инициация компонента происходит внутри вызова создания.
+ */
 inline fun <Context, reified T : Component<Context, T>> createComponent(
     ctx: Context,
     noinline init: T.() -> Unit
@@ -185,11 +188,11 @@ inline fun <Context, reified T : Component<Context, T>> createComponent(
  *
  * @see InputType
  */
-class InputIn(
-    val init: InputIn.() -> Unit
-) : Template<FlowContent>
+class InputIn<Context>(
+    ctx: Context,
+    init: InputIn<Context>.() -> Unit
+) : Component<Context, InputIn<Context>>(ctx, init)
 ```
-
 ```kotlin
 /**
  * Компонент select in
@@ -202,11 +205,21 @@ class InputIn(
  * @property nameSelect имя поля ввода,
  * @property selectedId id выбранной записи
  */
-class SelectIn(
-    val init: SelectIn.() -> Unit
-): Template<FlowContent>
+class SelectIn<Context>(
+    ctx: Context,
+    init: SelectIn<Context>.() -> Unit
+): Component<Context, SelectIn<Context>>(ctx, init)
 
 data class SelectInData(val id: String, val value: String)
+```
+```kotlin
+/**
+ * Компонент для выбора TimeZone
+ */
+class SelectInTimeZone<Context>(
+    ctx: Context,
+    init: SelectInTimeZone<Context>.() -> Unit
+): Component<Context, SelectInTimeZone<Context>>(ctx, init)
 ```
 
 ### JWT

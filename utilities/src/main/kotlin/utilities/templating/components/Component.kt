@@ -12,12 +12,17 @@ abstract class Component<Context, T>(
     protected val content = TemplatePlaceholder<Template<FlowContent>>()
 }
 
-/** Метод создания компонентов унаследованных от Component */
+/**
+ * Метод создания компонентов унаследованных от Component
+ * Инициация компонента происходит внутри вызова создания.
+ */
 inline fun <Context, reified T : Component<Context, T>> createComponent(
     ctx: Context,
     noinline init: T.() -> Unit
 ): Component<Context, T> = if (T::class.primaryConstructor != null ) {
-        T::class.primaryConstructor!!.call(ctx, init)
+        val instance = T::class.primaryConstructor!!.call(ctx, init)
+        instance.init()
+        instance
     } else {
         throw Throwable("T class must have a primary constructor")
     }

@@ -4,9 +4,9 @@
 
 package utilities.templating.components.inputin
 
-import io.ktor.server.html.*
 import kotlinx.html.*
 import utilities.UtilitiesLibrary
+import utilities.templating.components.Component
 
 /**
  * Компонент input-in
@@ -21,9 +21,10 @@ import utilities.UtilitiesLibrary
  *
  * @see InputType
  */
-class InputIn(
-    val init: InputIn.() -> Unit
-) : Template<FlowContent> {
+class InputIn<Context>(
+    ctx: Context,
+    init: InputIn<Context>.() -> Unit
+) : Component<Context, InputIn<Context>>(ctx, init) {
     var labelInput: String = "Input:"
     var typeInput: InputType = InputType.text
     var valueInput: String = ""
@@ -33,8 +34,6 @@ class InputIn(
     var hintInput: String = ""
 
     override fun FlowContent.apply() {
-        init()
-
         val internalId = UtilitiesLibrary.randomCode(10)
 
         inputIn {

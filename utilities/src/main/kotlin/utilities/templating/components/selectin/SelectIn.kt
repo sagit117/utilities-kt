@@ -4,8 +4,8 @@
 
 package utilities.templating.components.selectin
 
-import io.ktor.server.html.*
 import kotlinx.html.*
+import utilities.templating.components.Component
 
 /**
  * Компонент select in
@@ -18,9 +18,10 @@ import kotlinx.html.*
  * @property nameSelect имя поля ввода,
  * @property selectedId id выбранной записи
  */
-class SelectIn(
-    val init: SelectIn.() -> Unit
-): Template<FlowContent> {
+class SelectIn<Context>(
+    ctx: Context,
+    init: SelectIn<Context>.() -> Unit
+): Component<Context, SelectIn<Context>>(ctx, init) {
     var data: List<SelectInData> = listOf()
     var extClass: Set<String> = setOf()
     var labelSelect: String = "Select:"
@@ -30,7 +31,7 @@ class SelectIn(
     var selectedId: String = ""
 
     override fun FlowContent.apply() {
-        init()
+//        init()
 
         div {
             classes = extClass
