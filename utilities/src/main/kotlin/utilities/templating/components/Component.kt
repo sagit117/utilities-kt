@@ -29,7 +29,7 @@ inline fun <Context: FrontContext, reified T : Component<Context, T>> createComp
     }
 
 abstract class FrontContext {
-    var flashMessageDTO: FlashMessageDTO? = null
+    open var flashMessageDTO: FlashMessageDTO? = null
 }
 
 
