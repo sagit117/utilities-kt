@@ -82,11 +82,63 @@ object PostgresConnector {
      *
      * @param block функция запроса
      */
-    fun <T> dbQuery(block: suspend () -> T): T = runBlocking {
-        newSuspendedTransaction(Dispatchers.IO) {
-            block()
-        }
-    }
+    fun <T> dbQuery(block: suspend () -> T): T 
+}
+```
+```kotlin
+/** Общий коннектор для рассылки уведомлений.
+ * Помещает в очередь уведомление и через время заданное в параметре delayBeforeSend отправляет самое первое вошедшее.
+ *
+ * @property delayBeforeSend время задержки перед отправкой оповещения
+ * @property maxCountTrySend максимальное число попыток отправки уведомления до его удаления
+ * @property mailerTransport транспорт для отправки Email
+ */
+object NotificatorConnector {
+    var delayBeforeSend = 5000L
+    var maxCountTrySend = 5
+    var mailerTransport: NotificationTransportConnector = MailerConnector
+    
+    fun addQueue(notificationDTO: NotificationDTO): Boolean
+}
+
+@Serializable
+data class NotificationDTO(
+    val type: NotificationType,
+    val message: String,
+    val date: String,
+    val address: Set<String>,
+    val subject: String,
+    var countSend: Int = 0,
+)
+
+enum class NotificationType {
+    EMAIL
+}
+```
+```kotlin
+/** Коннектор для отправки Email */
+object MailerConnector: NotificationTransportConnector {
+    private val email = HtmlEmail()
+
+    fun init(configMailer: ConfigMailer): Boolean
+    override fun send(subject: String, msgHtml: String, emails: Set<String>, altMsgText: String?): Boolean
+}
+
+@Serializable
+data class ConfigMailer(
+    val hostName: String,
+    val smtpPort: Int,
+    val user: String,
+    val password: String,
+    val isSSLOnConnect: Boolean,
+    val from: String,
+    val charSet: String,
+    val debug: Boolean,
+)
+
+interface NotificationTransportConnector {
+    fun init(configMailer: ConfigMailer): Boolean
+    fun send(subject: String, msgHtml: String, emails: Set<String>, altMsgText: String?): Boolean
 }
 ```
 
