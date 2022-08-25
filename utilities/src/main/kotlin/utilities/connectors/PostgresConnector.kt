@@ -8,7 +8,7 @@ import com.zaxxer.hikari.HikariDataSource
 import java.sql.Connection
 
 /** Класс хранилище соединений для Postgres */
-object PostgresConnector {
+open class PostgresConnector {
     private val dataSource = HikariDataSource()
     private val connection: () -> Connection = { dataSource.connection }
 
