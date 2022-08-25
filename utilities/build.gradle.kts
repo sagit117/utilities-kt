@@ -3,7 +3,7 @@ plugins {
     kotlin("jvm") version "1.7.10"
 }
 
-version = "1.1.18"
+version = "1.1.19"
 
 repositories {
     mavenCentral()
@@ -24,6 +24,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:0.39.1")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.8.0")
     implementation("org.apache.commons:commons-email:1.5")
+    implementation ("com.zaxxer:HikariCP:5.0.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

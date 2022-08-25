@@ -4,38 +4,33 @@
 
 package utilities.connectors
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.Transaction
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
-import utilities.extensions.log
+import com.zaxxer.hikari.HikariDataSource
+import java.sql.Connection
 
-/** Postgres exposed connector */
+/** Класс хранилище соединений для Postgres */
 object PostgresConnector {
-    fun init(
-        driverClassName: String,
-        jdbcURL: String,
-        user: String,
-        password: String,
-        initTables: Transaction.() -> Unit, // метод инициации таблиц
-    ) {
-        val database = Database.connect(jdbcURL, driverClassName, user, password)
+    private val dataSource = HikariDataSource()
+    private val connection: () -> Connection = { dataSource.connection }
 
-        "Version PostgresSQL: ${database.version}".log(this.javaClass.simpleName).info()
-
-        transaction(database, initTables)
+    fun init(url: String, user: String, password: String) {
+        dataSource.jdbcUrl = url
+        dataSource.username = user
+        dataSource.password = password
     }
 
     /**
-     * Запрос к БД
+     * Использует выделенное подключение для исполнения кода из параметра block,
+     * после выполнения, закрывает соединение.
      *
-     * @param block функция запроса
+     * @param block метод будет вызван с соединением к БД.
+     * @return результат выполнения кода в block
      */
-    fun <T> dbQuery(block: suspend () -> T): T = runBlocking {
-        newSuspendedTransaction(Dispatchers.IO) {
-            block()
-        }
+    fun <T : Any> use(block: (connection: Connection) -> T): T {
+        val connection = connection()
+        val result = block(connection)
+
+        connection.close()
+
+        return result
     }
 }
