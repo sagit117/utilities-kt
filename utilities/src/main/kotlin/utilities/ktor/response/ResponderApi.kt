@@ -48,7 +48,7 @@ class ResponderApi(var callContext: ApplicationCall) {
         if (data != null) responseJSON.putAll(data)
 
         "Client requestID: $requestID error: ${error.localizedMessage ?: error.message}"
-            .log(error.javaClass.simpleName)
+            .log(error::class.java.packageName)
             .error()
 
         val code: HttpStatusCode = statusCode ?: when(error) {

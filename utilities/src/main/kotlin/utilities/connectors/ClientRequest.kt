@@ -46,10 +46,10 @@ class Resolver(private val query: suspend () -> HttpResponse) {
         val response = query.invoke()
 
         if (response.status == HttpStatusCode.OK) {
-            "statusOK ${response.status} ${HttpStatusCode.OK} ${response.status == HttpStatusCode.OK}".log(this.javaClass.simpleName).info()
+            "statusOK ${response.status} ${HttpStatusCode.OK} ${response.status == HttpStatusCode.OK}".log(this::class.java.packageName).info()
             successCb(response)
         } else {
-            "statusERROR ${response.status} ${HttpStatusCode.OK} ${response.status == HttpStatusCode.OK}".log(this.javaClass.simpleName).info()
+            "statusERROR ${response.status} ${HttpStatusCode.OK} ${response.status == HttpStatusCode.OK}".log(this.javaClass.packageName).info()
             rejectCb(response)
         }
     }

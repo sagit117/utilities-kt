@@ -4,7 +4,6 @@
 
 package utilities.connectors
 
-import kotlinx.serialization.Serializable
 import org.apache.commons.mail.DefaultAuthenticator
 import org.apache.commons.mail.HtmlEmail
 import utilities.extensions.log
@@ -50,7 +49,7 @@ object MailerConnector: NotificationTransportConnector {
             email.buildMimeMessage()
         } else {
             email.mimeMessage.subject = subject
-            email.mimeMessage.setContent(msgHtml, "text/html; charset=utf-8")
+            email.mimeMessage.setContent(msgHtml, email.mimeMessage.contentType)
             email.mimeMessage.setRecipients(Message.RecipientType.TO, emptyArray())
 
             for (mail in emails) {
@@ -65,14 +64,25 @@ object MailerConnector: NotificationTransportConnector {
 
             true
         } catch (error: Throwable) {
-            "Sending email is error: $error, cause: ${error.cause}".log(this::class.java.simpleName).error()
+            "Sending email is error: $error, cause: ${error.cause}".log(this::class.java.packageName).error()
 
             false
         }
     }
 }
 
-@Serializable
+/**
+ * Класс хранения настроек подключения к email-серверу
+ *
+ * @property hostName адрес сервера.
+ * @property smtpPort порт.
+ * @property user имя пользователя.
+ * @property password пароль пользователя.
+ * @property isSSLOnConnect шифрованное соединение.
+ * @property from на указанный адрес будет отправлено тестовое сообщение.
+ * @property charSet кодировка.
+ * @property debug флаг отладки.
+ */
 data class ConfigMailer(
     val hostName: String,
     val smtpPort: Int,

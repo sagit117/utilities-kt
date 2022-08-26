@@ -23,7 +23,7 @@ object PostgresExposedConnector {
     ) {
         val database = Database.connect(jdbcURL, driverClassName, user, password)
 
-        "Version PostgresSQL: ${database.version}".log(this.javaClass.simpleName).info()
+        "Version PostgresSQL: ${database.version}".log(this.javaClass.packageName).info()
 
         transaction(database, initTables)
     }

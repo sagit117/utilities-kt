@@ -4,10 +4,7 @@
 
 package utilities.connectors
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import utilities.extensions.log
 
@@ -23,14 +20,27 @@ object NotificatorConnector {
     var delayBeforeSend = 5000L
     var maxCountTrySend = 5
     var mailerTransport: NotificationTransportConnector = MailerConnector
+    private var jobSending: Job? = null
 
-    suspend fun init(): Unit = coroutineScope { launch(Dispatchers.Default) { send() } }
+    /** Метод добавляет оповещение в очередь и запускает обработчик отправки, если он не был инициирован или не активен */
+    suspend fun addQueue(notificationDTO: NotificationDTO) {
+        queue.add(notificationDTO)
 
-    fun addQueue(notificationDTO: NotificationDTO): Boolean = queue.add(notificationDTO)
+        if (jobSending == null || !jobSending!!.isActive) {
+            coroutineScope {
+                jobSending = launch(Dispatchers.Default) {
+                    "send processing notification start".log(this::class.java.packageName).debug()
+                    send()
+                }
+            }
+        }
+    }
 
+    /** Обработчик отправок */
     private suspend fun send() {
         delay(delayBeforeSend)
 
+        "try sending".log(this::class.java.packageName).debug()
         queue.firstOrNull()?.let { message ->
             when(message.type) {
                 NotificationType.EMAIL -> {
@@ -41,22 +51,30 @@ object NotificatorConnector {
                         altMsgText = null
                     )) {
                         queue.removeAt(0)
-                        "Notification send success".log(this::class.java.simpleName).debug()
+                        "Notification send success".log(this::class.java.packageName).debug()
                     } else {
                         val tmpNotification = queue[0].copy(countSend = queue[0].countSend++)
                         queue.removeAt(0)
 
-                        if (tmpNotification.countSend <= maxCountTrySend) addQueue(tmpNotification)
+                        if (tmpNotification.countSend <= maxCountTrySend) {
+                            "Send failed, try count: ${tmpNotification.countSend}".log(this::class.java.packageName).debug()
+                            addQueue(tmpNotification)
+                        }
                     }
                 }
 
                 else -> {
-                    "Unknown type notification".log(this::class.java.simpleName).error()
+                    "Unknown type notification".log(this::class.java.packageName).error()
                 }
             }
         }
 
-        send()
+        if (queue.isEmpty()) {
+            jobSending?.cancel()
+            "send processing notification finish".log(this::class.java.packageName).debug()
+        } else {
+            send()
+        }
     }
 }
 
