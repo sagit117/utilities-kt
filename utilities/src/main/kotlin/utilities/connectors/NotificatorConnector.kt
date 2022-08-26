@@ -27,9 +27,9 @@ object NotificatorConnector {
         queue.add(notificationDTO)
 
         if (jobSending == null || !jobSending!!.isActive) {
+            "send processing notification start".log(this::class.java.packageName).debug()
             coroutineScope {
                 jobSending = launch(Dispatchers.Default) {
-                    "send processing notification start".log(this::class.java.packageName).debug()
                     send()
                 }
             }

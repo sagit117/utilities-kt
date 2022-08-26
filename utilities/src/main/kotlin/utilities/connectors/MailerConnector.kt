@@ -7,20 +7,12 @@ package utilities.connectors
 import org.apache.commons.mail.DefaultAuthenticator
 import org.apache.commons.mail.HtmlEmail
 import utilities.extensions.log
-import javax.mail.Message
 
 /** Коннектор для отправки Email */
 object MailerConnector: NotificationTransportConnector {
-    private val email = HtmlEmail()
-
+    private lateinit var config: ConfigMailer
     override fun init(configMailer: ConfigMailer): Boolean {
-        email.hostName = configMailer.hostName
-        email.setSmtpPort(configMailer.smtpPort)
-        email.setAuthenticator(DefaultAuthenticator(configMailer.user, configMailer.password))
-        email.isSSLOnConnect = configMailer.isSSLOnConnect
-        email.setFrom(configMailer.from)
-        email.setCharset(configMailer.charSet)
-        email.setDebug(configMailer.debug)
+        config = configMailer
 
         /** Тестовое письмо */
         return send(
@@ -31,41 +23,41 @@ object MailerConnector: NotificationTransportConnector {
         )
     }
 
+    private fun buildEmail(): HtmlEmail {
+        val email = HtmlEmail()
+        email.hostName = config.hostName
+        email.setSmtpPort(config.smtpPort)
+        email.setAuthenticator(DefaultAuthenticator(config.user, config.password))
+        email.isSSLOnConnect = config.isSSLOnConnect
+        email.setFrom(config.from)
+        email.setCharset(config.charSet)
+        email.setDebug(config.debug)
+
+        return email
+    }
+
     override fun send(
         subject: String,
         msgHtml: String,
         emails: Set<String>,
         altMsgText: String?
     ): Boolean {
-        if (email.mimeMessage == null) {
-            email.subject = subject
-            email.setMsg(msgHtml)
-            email.setTextMsg(altMsgText ?: "Your email client does not support HTML messages")
+        val email = buildEmail()
+        email.subject = subject
+        email.setMsg(msgHtml)
+        email.setTextMsg(altMsgText ?: "Your email client does not support HTML messages")
 
-            for (mail in emails) {
-                email.addTo(mail)
-            }
-
-            email.buildMimeMessage()
-        } else {
-            email.mimeMessage.subject = subject
-            email.mimeMessage.setContent(msgHtml, email.mimeMessage.contentType)
-            email.mimeMessage.setRecipients(Message.RecipientType.TO, emptyArray())
-
-            for (mail in emails) {
-                email.mimeMessage.addRecipients(Message.RecipientType.TO, mail)
-            }
-
-            email.mimeMessage.saveChanges()
+        for (mail in emails) {
+            email.addTo(mail)
         }
+
+        email.buildMimeMessage()
 
         return try {
             email.sendMimeMessage()
-
             true
         } catch (error: Throwable) {
             "Sending email is error: $error, cause: ${error.cause}".log(this::class.java.packageName).error()
-
             false
         }
     }
