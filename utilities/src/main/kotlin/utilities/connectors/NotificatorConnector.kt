@@ -27,7 +27,7 @@ object NotificatorConnector {
         queue.add(notificationDTO)
 
         if (jobSending == null || !jobSending!!.isActive) {
-            "send processing notification start".log(this::class.java.packageName).debug()
+            "send processing notification start".log(this::class.java.name).debug()
             coroutineScope {
                 jobSending = launch(Dispatchers.Default) {
                     send()
@@ -40,7 +40,7 @@ object NotificatorConnector {
     private suspend fun send() {
         delay(delayBeforeSend)
 
-        "try sending".log(this::class.java.packageName).debug()
+        "try sending".log(this::class.java.name).debug()
         queue.firstOrNull()?.let { message ->
             when(message.type) {
                 NotificationType.EMAIL -> {
@@ -51,27 +51,27 @@ object NotificatorConnector {
                         altMsgText = null
                     )) {
                         queue.removeAt(0)
-                        "Notification send success".log(this::class.java.packageName).debug()
+                        "Notification send success".log(this::class.java.name).debug()
                     } else {
                         val tmpNotification = queue[0].copy(countSend = queue[0].countSend++)
                         queue.removeAt(0)
 
                         if (tmpNotification.countSend <= maxCountTrySend) {
-                            "Send failed, try count: ${tmpNotification.countSend}".log(this::class.java.packageName).debug()
+                            "Send failed, try count: ${tmpNotification.countSend}".log(this::class.java.name).debug()
                             addQueue(tmpNotification)
                         }
                     }
                 }
 
                 else -> {
-                    "Unknown type notification".log(this::class.java.packageName).error()
+                    "Unknown type notification".log(this::class.java.name).error()
                 }
             }
         }
 
         if (queue.isEmpty()) {
             jobSending?.cancel()
-            "send processing notification finish".log(this::class.java.packageName).debug()
+            "send processing notification finish".log(this::class.java.name).debug()
         } else {
             send()
         }

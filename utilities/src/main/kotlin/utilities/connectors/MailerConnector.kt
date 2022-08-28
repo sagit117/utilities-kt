@@ -57,7 +57,7 @@ object MailerConnector: NotificationTransportConnector {
             email.sendMimeMessage()
             true
         } catch (error: Throwable) {
-            "Sending email is error: $error, cause: ${error.cause}".log(this::class.java.packageName).error()
+            "Sending email is error: $error, cause: ${error.cause}".log(this::class.java.name).error()
             false
         }
     }
