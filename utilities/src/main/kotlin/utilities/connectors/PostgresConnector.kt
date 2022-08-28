@@ -25,7 +25,7 @@ open class PostgresConnector {
      * @param block метод будет вызван с соединением к БД.
      * @return результат выполнения кода в block
      */
-    fun <T : Any> use(block: (connection: Connection) -> T): T {
+    fun <T : Any> use(block: (connection: Connection) -> T?): T? {
         val connection = connection()
         val result = block(connection)
 
