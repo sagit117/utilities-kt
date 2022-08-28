@@ -5,7 +5,6 @@
 package utilities.ktor.plugins
 
 import io.ktor.server.application.*
-import io.ktor.util.*
 import utilities.UtilitiesLibrary
 
 /**
@@ -19,9 +18,4 @@ val ResponseIdPlugin = createApplicationPlugin(name = "ResponseIdPlugin") {
             "${System.currentTimeMillis()}-${UtilitiesLibrary.randomCode(10)}"
         )
     }
-}
-
-/** Аттрибуты вызова */
-enum class AttributeKeys(val value: AttributeKey<String>) {
-    RESPONSE_ID(AttributeKey("ResponseID"))
 }
