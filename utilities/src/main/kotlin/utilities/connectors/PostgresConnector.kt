@@ -5,6 +5,8 @@
 package utilities.connectors
 
 import com.zaxxer.hikari.HikariDataSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.sql.Connection
 
 /** Класс хранилище соединений для Postgres */
@@ -25,12 +27,12 @@ open class PostgresConnector {
      * @param block метод будет вызван с соединением к БД.
      * @return результат выполнения кода в block
      */
-    fun <T : Any> use(block: (connection: Connection) -> T?): T? {
+    suspend fun <T : Any> use(block: (connection: Connection) -> T?): T? = withContext(Dispatchers.IO) {
         val connection = connection()
         val result = block(connection)
 
         connection.close()
 
-        return result
+        return@withContext result
     }
 }
